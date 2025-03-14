@@ -1,3 +1,5 @@
+name: Staging Deploy
+
 on:
   pull_request:
     types: ['labeled', 'synchronize']
