@@ -27,7 +27,7 @@ jobs:
     needs: get_target
     env:
       target: ${{ needs.get_target.outputs.target }}
-    if: ${{ env.target }}
+    if: ${{ needs.get_target.outputs.target }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/github-script@v7
@@ -41,7 +41,7 @@ jobs:
     env:
       target: ${{ needs.get_target.outputs.target }}
     if: |
-      env.target &&
+      needs.get_target.outputs.target &&
       always() &&
       !contains(needs.update_environment.result, 'failure') &&
       !contains(needs.update_environment.result, 'cancelled')
