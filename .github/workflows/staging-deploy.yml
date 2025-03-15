@@ -40,8 +40,6 @@ jobs:
       always() &&
       !contains(needs.update_environment.result, 'failure') &&
       !contains(needs.update_environment.result, 'cancelled')
-    env:
-      target: ${{jobs.get_target.outputs.target}}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/github-script@v7
