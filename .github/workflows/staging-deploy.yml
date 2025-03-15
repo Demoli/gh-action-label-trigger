@@ -32,7 +32,7 @@ jobs:
         id: deploy_target
         if: ${{ !inputs.target }}
         with:
-          script: console.log('Setting up environment %{{env.TARGET}} ')
+          script: console.log('Setting up environment %{{jobs.get_target.outputs.target}} ')
   deploy:
     runs-on: ubuntu-22.04
     needs: update_environment
@@ -46,4 +46,4 @@ jobs:
         id: deploy_target
         if: ${{ !inputs.target }}
         with:
-          script: console.log('Deploying to %{{env.TARGET}} ')
+          script: console.log('Deploying to %{{jobs.get_target.outputs.target}} ')
