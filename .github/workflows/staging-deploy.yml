@@ -4,14 +4,48 @@ on:
   pull_request:
     types: ['labeled', 'synchronize']
 jobs:
-  staging_deploy:
+  get_target:
     runs-on: ubuntu-22.04
+    outputs:
+      target: ${{ steps.step1.outputs.test }}
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/github-script@v7
         id: deploy_target
+        if: ${{ !inputs.target }}
         with:
           script: |
-            console.log(context)
+            const script = require('.github/workflows/scripts/branch.js')
+            return script({github, context});
           result-encoding: 'string'
+      - name: set target output
+        run: echo 'target=${{steps.deploy_target.outputs.result}}' >> "$GITHUB_OUTPUT"
+  update_environment:
+    runs-on: ubuntu-22.04
+    needs: get_target
+    env: 
+      target: ${{jobs.get_target.outputs.target}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/github-script@v7
+        id: deploy_target
+        if: ${{ !inputs.target }}
+        with:
+          script: console.log('Setting up environment %{{env.target}} ')
+  deploy:
+    runs-on: ubuntu-22.04
+    needs: update_environment
+    if: |
+      always() &&
+      !contains(needs.update_environment.result, 'failure') &&
+      !contains(needs.update_environment.result, 'cancelled')
+    env: 
+      target: ${{jobs.get_target.outputs.target}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/github-script@v7
+        id: deploy_target
+        if: ${{ !inputs.target }}
+        with:
+          script: console.log('Deploying to %{{env.target}} ')
