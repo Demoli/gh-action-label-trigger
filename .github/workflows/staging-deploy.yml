@@ -49,3 +49,11 @@ jobs:
         id: deploy
         with:
           script: console.log("Deploying to ${{ env.target }}")
+  debug:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/github-script@v7
+        id: deploy
+        with:
+          script: console.log("Debug target ${{ jobs.get_target.outputs.target }}")
