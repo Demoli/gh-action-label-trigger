@@ -41,7 +41,7 @@ jobs:
     env:
       target: ${{ needs.get_target.outputs.target }}
     if: |
-      ${{ env.target }} &&
+      env.target &&
       always() &&
       !contains(needs.update_environment.result, 'failure') &&
       !contains(needs.update_environment.result, 'cancelled')
