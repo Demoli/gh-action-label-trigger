@@ -21,8 +21,7 @@ jobs:
           result-encoding: 'string'
       - name: set target output
         run: |
-          echo 'target=${{steps.deploy_target.outputs.result}}' >> "$GITHUB_OUTPUT"
-          echo 'TARGET=${{steps.deploy_target.outputs.result}}' >> "$GITHUB_ENV"
+          echo "target=${{steps.deploy_target.outputs.result}}" >> "$GITHUB_OUTPUT"
   update_environment:
     runs-on: ubuntu-22.04
     needs: get_target
@@ -34,7 +33,7 @@ jobs:
         id: deploy_target
         if: ${{ !inputs.target }}
         with:
-          script: console.log('Setting up environment ${{ env.target }} ')
+          script: console.log("Setting up environment ${{ env.target }}")
   deploy:
     runs-on: ubuntu-22.04
     needs: update_environment
@@ -50,4 +49,4 @@ jobs:
         id: deploy_target
         if: ${{ !inputs.target }}
         with:
-          script: console.log('Deploying to ${{env.target}} ')
+          script: console.log("Deploying to ${{env.target}}")
