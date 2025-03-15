@@ -20,22 +20,26 @@ jobs:
             return script({github, context});
           result-encoding: 'string'
       - name: set target output
-        run: | 
+        run: |
           echo 'target=${{steps.deploy_target.outputs.result}}' >> "$GITHUB_OUTPUT"
           echo 'TARGET=${{steps.deploy_target.outputs.result}}' >> "$GITHUB_ENV"
   update_environment:
     runs-on: ubuntu-22.04
     needs: get_target
+    env:
+      target: ${{ needs.get_target.outputs.target }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/github-script@v7
         id: deploy_target
         if: ${{ !inputs.target }}
         with:
-          script: console.log('Setting up environment ${{ get_target.outputs.target }} ')
+          script: console.log('Setting up environment ${{ env.target }} ')
   deploy:
     runs-on: ubuntu-22.04
     needs: update_environment
+    env:
+      target: ${{ needs.get_target.outputs.target }}
     if: |
       always() &&
       !contains(needs.update_environment.result, 'failure') &&
@@ -46,4 +50,4 @@ jobs:
         id: deploy_target
         if: ${{ !inputs.target }}
         with:
-          script: console.log('Deploying to ${{env.TARGET}} ')
+          script: console.log('Deploying to ${{env.target}} ')
