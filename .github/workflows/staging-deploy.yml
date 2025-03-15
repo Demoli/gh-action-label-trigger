@@ -7,7 +7,7 @@ jobs:
   get_target:
     runs-on: ubuntu-22.04
     outputs:
-      target: ${{ steps.step1.outputs.test }}
+      target: ${{ steps.get_target.outputs.target }}
     steps:
       - uses: actions/checkout@v4
 
