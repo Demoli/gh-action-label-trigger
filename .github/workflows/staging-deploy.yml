@@ -7,7 +7,7 @@ jobs:
   get_target:
     runs-on: ubuntu-22.04
     outputs:
-      target: ${{ steps.get_target.outputs.target }}
+      target: ${{ steps.set_target.outputs.target }}
     steps:
       - uses: actions/checkout@v4
 
@@ -20,6 +20,7 @@ jobs:
             return script({github, context});
           result-encoding: 'string'
       - name: set target output
+        id: set_target
         run: |
           echo "target=${{steps.deploy_target.outputs.result}}" >> "$GITHUB_OUTPUT"
   update_environment:
