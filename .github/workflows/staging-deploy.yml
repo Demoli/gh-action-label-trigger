@@ -38,15 +38,14 @@ jobs:
     runs-on: ubuntu-22.04
     needs: update_environment
     env:
-      deploy_target: ${{ needs.get_target.outputs.target }}
-    if: |
-      needs.get_target.outputs.target &&
-      always() &&
-      !contains(needs.update_environment.result, 'failure') &&
-      !contains(needs.update_environment.result, 'cancelled')
+      target: ${{ needs.get_target.outputs.target }}
+#    if: |
+#      always() &&
+#      !contains(needs.update_environment.result, 'failure') &&
+#      !contains(needs.update_environment.result, 'cancelled')
     steps:
       - uses: actions/checkout@v4
       - uses: actions/github-script@v7
         id: deploy
         with:
-          script: console.log("Deploying to ${{ needs.get_target.outputs.target }}")
+          script: console.log("Deploying to ${{ env.target }}")
