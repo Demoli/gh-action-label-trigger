@@ -48,3 +48,13 @@ jobs:
         id: deploy
         with:
           script: console.log("Deploying to ${{ env.target }}")
+  cleanup:
+    runs-on: ubuntu-22.04
+    needs: [ get_target, deploy ]
+    if: always()
+    env:
+      target: ${{ needs.get_target.outputs.target }}
+    steps:
+      - uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          labels: stage-${{ env.target }}
